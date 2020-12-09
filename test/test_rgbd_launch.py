@@ -35,29 +35,68 @@
 #***********************************************************
 # Author: Yuki Furuta <furushchev@jsk.imi.i.u-tokyo.ac.jp>
 
-import tf
-import rospy
+# import tf
+# import rospy
+# from unittest import TestCase
+
+
+# class TestRGBDLaunch(TestCase):
+#     def testKinectFrames(self):
+#         tfListener = tf.TransformListener()
+#         try:
+#             tfListener.waitForTransform("camera_depth_optical_frame",
+#                                         "camera_rgb_optical_frame",
+#                                         rospy.Time(), rospy.Duration(20))
+#         except Exception as e:
+#             self.fail(str(e))
+#         try:
+#             trans = tfListener.lookupTransform("camera_depth_optical_frame",
+#                                                "camera_rgb_optical_frame",
+#                                                rospy.Time())
+#             self.assertIsNotNone(trans)
+#         except Exception as e:
+#             self.fail(str(e))
+
+# if __name__ == '__main__':
+#     rospy.init_node("test_kinect_frames")
+#     import rostest
+#     rostest.rosrun("rgbd_launch", "test_kinect_frames", TestRGBDLaunch)
+import rclpy
+import tf2_ros
 from unittest import TestCase
 
-
 class TestRGBDLaunch(TestCase):
-    def testKinectFrames(self):
-        tfListener = tf.TransformListener()
+    @classmethod
+    def setUp(cls):
+        cls.context = rclpy.context.Context()
+        rclpy.init(context=cls.context)
+        cls.node = rclpy.create_node(
+            'test_foxy_frames',
+            context=cls.context
+        )
+    
+    @classmethod
+    def tearDown(cls):
+        cls.node.destroy_node()
+        rclpy.shutdown(context=cls.context)
+    
+    def testFoxyFrames(self):
+        tfBuffer = tf2_ros.Buffer()
+        tfListener = tf2_ros.TransformListener(tfBuffer)
         try:
-            tfListener.waitForTransform("camera_depth_optical_frame",
-                                        "camera_rgb_optical_frame",
-                                        rospy.Time(), rospy.Duration(20))
+            tfBuffer.waitForTransform(camera_depth_optical_frame,
+                                      camera_rgb_optical_frame,
+                                      rclpy.Time(),
+                                      rclpy.Duration(20))
         except Exception as e:
             self.fail(str(e))
         try:
-            trans = tfListener.lookupTransform("camera_depth_optical_frame",
-                                               "camera_rgb_optical_frame",
-                                               rospy.Time())
+            trans = tfBuffer.lookupTransform(camera_depth_optical_frame,
+                                     camera_rgb_optical_frame,
+                                     rclpy.Time())
             self.assertIsNotNone(trans)
         except Exception as e:
             self.fail(str(e))
 
 if __name__ == '__main__':
-    rospy.init_node("test_kinect_frames")
-    import rostest
-    rostest.rosrun("rgbd_launch", "test_kinect_frames", TestRGBDLaunch)
+    unittest.main()

@@ -3,7 +3,7 @@ from launch.actions import DeclareLaunchArgument, GroupAction
 from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration
 from launch.conditions import IfCondition, UnlessCondition
-from launch_ros.actions import ComposableNodeContainer
+from launch_ros.actions import LoadComposableNodes
 from launch_ros.descriptions import ComposableNode
 
 def generate_launch_description():
@@ -25,11 +25,15 @@ def generate_launch_description():
             'hw_registered_processing',
             default_value="true"
         ),
-        ComposableNodeContainer(
-            name='component_container',
-            namespace=LaunchConfiguration('manager'),
-            package='rclcpp_components',
-            executable='component_container',
+        DeclareLaunchArgument(
+            name='container', default_value='',
+            description=(
+                'Name of an existing node container to load launched nodes into. '
+                'If unset, a new container will be created.'
+            )
+        ),
+        LoadComposableNodes(
+            target_container=LaunchConfiguration('container'),
             composable_node_descriptions=[
                 ComposableNode(
                     package='depth_image_proc',
@@ -51,11 +55,8 @@ def generate_launch_description():
             ],
             condition=IfCondition(LaunchConfiguration('sw_registered_processing'))            
         ),
-        ComposableNodeContainer(
-            name='component_container',
-            namespace=LaunchConfiguration('manager'),
-            package='rclcpp_components',
-            executable='component_container',
+        LoadComposableNodes(
+            target_container=LaunchConfiguration('container'),
             composable_node_descriptions=[
                 ComposableNode(
                     package='depth_image_proc',

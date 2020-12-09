@@ -3,7 +3,8 @@ from launch.actions import DeclareLaunchArgument, GroupAction
 from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration
 from launch.conditions import IfCondition, UnlessCondition
-from launch_ros.actions import ComposableNodeContainer
+from launch_ros.actions import LoadComposableNodes
+from launch.conditions import LaunchConfigurationNotEquals, LaunchConfigurationEquals
 from launch_ros.descriptions import ComposableNode
 
 def generate_launch_description():
@@ -41,13 +42,18 @@ def generate_launch_description():
             'depth_registered_filtered',
             default_value='depth_registered'
         ),
+        DeclareLaunchArgument(
+            name='container', default_value='',
+            description=(
+                'Name of an existing node container to load launched nodes into. '
+                'If unset, a new container will be created.'
+            )
+        ),
         GroupAction(
             actions=[
-                ComposableNodeContainer(
-                    name='component_container',
-                    namespace=LaunchConfiguration('manager'),
-                    package='rclcpp_components',
-                    executable='component_container',
+                LoadComposableNodes(
+                    condition=LaunchConfigurationNotEquals('container', ''),
+                    target_container=LaunchConfiguration('container'), 
                     composable_node_descriptions=[
                         ComposableNode(
                             package='depth_image_proc',
@@ -96,11 +102,9 @@ def generate_launch_description():
         ),
         GroupAction(
             actions=[
-                ComposableNodeContainer(
-                    name='component_container',
-                    namespace=LaunchConfiguration('manager'),
-                    package='rclcpp_components',
-                    executable='component_container',
+                LoadComposableNodes(
+                    condition=LaunchConfigurationNotEquals('container', ''),
+                    target_container=LaunchConfiguration('container'), 
                     composable_node_descriptions=[
                         ComposableNode(
                             package='image_proc',

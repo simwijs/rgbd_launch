@@ -3,6 +3,9 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration
 from launch.conditions import IfCondition, UnlessCondition
+from launch_ros.actions import ComposableNodeContainer
+from launch.conditions import LaunchConfigurationNotEquals, LaunchConfigurationEquals
+from launch.actions import SetLaunchConfiguration
 from ament_index_python.packages import get_package_share_directory
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
@@ -32,9 +35,29 @@ def generate_launch_description():
         arg('depth_registered', 'depth_registered'),
         arg('depth_registered_filtered', 'depth_registered'),
         arg('projector', 'projector'),
+        DeclareLaunchArgument(
+            name='container', default_value='',
+            description=(
+                'Name of an existing node container to load launched nodes into. '
+                'If unset, a new container will be created.'
+            )
+        ),
+        ComposableNodeContainer(
+            condition=LaunchConfigurationEquals('container', ''),
+            package='rclcpp_components',
+            executable='component_container',
+            name='component_container',
+            namespace='',
+        ),
+        SetLaunchConfiguration(
+            condition=LaunchConfigurationEquals('container', ''),
+            name='container',
+            value='component_container'
+        ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(rgbd_launch_dir + '/launch/includes/rgb.launch.py'),
             launch_arguments=[
+                ('container', LaunchConfiguration('container')),
                 ('manager', LaunchConfiguration('manager')),
                 ('respawn', LaunchConfiguration('respawn')),
                 ('rgb', LaunchConfiguration('rgb')),
@@ -45,6 +68,7 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(rgbd_launch_dir + '/launch/includes/ir.launch.py'),
             launch_arguments=[
+                ('container', LaunchConfiguration('container')),
                 ("manager", LaunchConfiguration('manager')),
                 ('respawn', LaunchConfiguration('respawn')),
                 ('ir', LaunchConfiguration('ir'))
@@ -54,6 +78,7 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(rgbd_launch_dir + '/launch/includes/depth.launch.py'),
             launch_arguments=[
+                ('container', LaunchConfiguration('container')),
                 ("manager", LaunchConfiguration('manager')),
                 ('respawn', LaunchConfiguration('respawn')),
                 ('depth', LaunchConfiguration('depth'))
@@ -63,6 +88,7 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(rgbd_launch_dir + '/launch/includes/depth_registered.launch.py'),
             launch_arguments=[
+                ('container', LaunchConfiguration('container')),
                 ("manager", LaunchConfiguration('manager')),
                 ('rgb', LaunchConfiguration('rgb')),
                 ('depth', LaunchConfiguration('depth')),
@@ -77,6 +103,7 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(rgbd_launch_dir + '/launch/includes/disparity.launch.py'),
             launch_arguments=[
+                ('container', LaunchConfiguration('container')),
                 ("manager", LaunchConfiguration('manager')),
                 ('depth', LaunchConfiguration('depth')),
                 ('projector', LaunchConfiguration('projector')),
@@ -87,6 +114,7 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(rgbd_launch_dir + '/launch/includes/disparity_registered.launch.py'),
             launch_arguments=[
+                ('container', LaunchConfiguration('container')),
                 ("manager", LaunchConfiguration('manager')),
                 ('depth_registered', LaunchConfiguration('depth_registered')),
                 ('projector', LaunchConfiguration('projector')),
