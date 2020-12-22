@@ -8,7 +8,6 @@ from launch_ros.descriptions import ComposableNode
 
 def generate_launch_description():
     return LaunchDescription([
-        DeclareLaunchArgument('manager'),
         DeclareLaunchArgument(
             'respawn',
             default_value="false"

@@ -9,7 +9,6 @@ from launch.conditions import LaunchConfigurationNotEquals, LaunchConfigurationE
 
 def generate_launch_description():
     return LaunchDescription([
-        DeclareLaunchArgument('manager'),
         DeclareLaunchArgument(
             'depth',
             default_value='depth'

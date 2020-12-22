@@ -9,7 +9,6 @@ from launch.conditions import LaunchConfigurationNotEquals, LaunchConfigurationE
 
 def generate_launch_description():
     return LaunchDescription([
-        DeclareLaunchArgument('manager'),
         DeclareLaunchArgument(
             'points_xyz',
             default_value="true"

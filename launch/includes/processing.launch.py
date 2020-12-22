@@ -18,7 +18,6 @@ def arg(name, value):
 def generate_launch_description():
     rgbd_launch_dir = get_package_share_directory('rgbd_launch')
     return LaunchDescription([
-        DeclareLaunchArgument('manager'),
         arg('respawn', 'false'),
         arg('rgb_processing', "true"),
         arg('debayer_processing', "true"),
@@ -58,7 +57,6 @@ def generate_launch_description():
             PythonLaunchDescriptionSource(rgbd_launch_dir + '/launch/includes/rgb.launch.py'),
             launch_arguments=[
                 ('container', LaunchConfiguration('container')),
-                ('manager', LaunchConfiguration('manager')),
                 ('respawn', LaunchConfiguration('respawn')),
                 ('rgb', LaunchConfiguration('rgb')),
                 ('debayer_processing', LaunchConfiguration('debayer_processing'))
@@ -69,7 +67,6 @@ def generate_launch_description():
             PythonLaunchDescriptionSource(rgbd_launch_dir + '/launch/includes/ir.launch.py'),
             launch_arguments=[
                 ('container', LaunchConfiguration('container')),
-                ("manager", LaunchConfiguration('manager')),
                 ('respawn', LaunchConfiguration('respawn')),
                 ('ir', LaunchConfiguration('ir'))
             ],
@@ -79,7 +76,6 @@ def generate_launch_description():
             PythonLaunchDescriptionSource(rgbd_launch_dir + '/launch/includes/depth.launch.py'),
             launch_arguments=[
                 ('container', LaunchConfiguration('container')),
-                ("manager", LaunchConfiguration('manager')),
                 ('respawn', LaunchConfiguration('respawn')),
                 ('depth', LaunchConfiguration('depth'))
             ],
@@ -89,7 +85,6 @@ def generate_launch_description():
             PythonLaunchDescriptionSource(rgbd_launch_dir + '/launch/includes/depth_registered.launch.py'),
             launch_arguments=[
                 ('container', LaunchConfiguration('container')),
-                ("manager", LaunchConfiguration('manager')),
                 ('rgb', LaunchConfiguration('rgb')),
                 ('depth', LaunchConfiguration('depth')),
                 ('depth_registered', LaunchConfiguration('depth_registered')),
@@ -104,7 +99,6 @@ def generate_launch_description():
             PythonLaunchDescriptionSource(rgbd_launch_dir + '/launch/includes/disparity.launch.py'),
             launch_arguments=[
                 ('container', LaunchConfiguration('container')),
-                ("manager", LaunchConfiguration('manager')),
                 ('depth', LaunchConfiguration('depth')),
                 ('projector', LaunchConfiguration('projector')),
                 ('respawn', LaunchConfiguration('respawn'))
@@ -115,7 +109,6 @@ def generate_launch_description():
             PythonLaunchDescriptionSource(rgbd_launch_dir + '/launch/includes/disparity_registered.launch.py'),
             launch_arguments=[
                 ('container', LaunchConfiguration('container')),
-                ("manager", LaunchConfiguration('manager')),
                 ('depth_registered', LaunchConfiguration('depth_registered')),
                 ('projector', LaunchConfiguration('projector')),
                 ('respawn', LaunchConfiguration('respawn')),
