@@ -14,6 +14,11 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument('rgb'),
         DeclareLaunchArgument(
+            'camera_topic_prefix',
+            default_value=""
+            # default_value="camera/front"
+        ),
+        DeclareLaunchArgument(
             'debayer_processing',
             default_value="true"
         ),
@@ -33,6 +38,8 @@ def generate_launch_description():
                     name=[LaunchConfiguration('rgb'), '_debayer'],
                     plugin='image_proc::DebayerNode',
                     remappings=[
+                        ('camera_info', [LaunchConfiguration('camera_topic_prefix'), '/camera_info']),
+                        ('image', [LaunchConfiguration('camera_topic_prefix'), '/image_raw']),
                         ('image_raw', [LaunchConfiguration('rgb'), '/image_raw']),
                         ('image_mono', [LaunchConfiguration('rgb'), '/image_mono']),
                         ('image_color', [LaunchConfiguration('rgb'), '/image_color'])
@@ -46,6 +53,8 @@ def generate_launch_description():
                     name=[LaunchConfiguration('rgb'), '_rectify_mono'],
                     plugin='image_proc::RectifyNode',
                     remappings=[
+                        ('camera_info', [LaunchConfiguration('camera_topic_prefix'), '/camera_info']),
+                        ('image', [LaunchConfiguration('camera_topic_prefix'), '/image_raw']),
                         ('image_mono', [LaunchConfiguration('rgb'), '/image_mono']),
                         ('image_rect', [LaunchConfiguration('rgb'), '/image_rect_mono']),
                     ],
@@ -58,6 +67,8 @@ def generate_launch_description():
                     name=[LaunchConfiguration('rgb'), '_rectify_color'],
                     plugin='image_proc::RectifyNode',
                     remappings=[
+                        ('camera_info', [LaunchConfiguration('camera_topic_prefix'), '/camera_info']),
+                        ('image', [LaunchConfiguration('camera_topic_prefix'), '/image_raw']),
                         ('image_mono', [LaunchConfiguration('rgb'), '/image_color']),
                         ('image_rect', [LaunchConfiguration('rgb'), '/image_rect_color']),
                     ],
@@ -76,6 +87,8 @@ def generate_launch_description():
                     name=[LaunchConfiguration('rgb'), '_rectify_color'],
                     plugin='image_proc::RectifyNode',
                     remappings=[
+                        ('camera_info', [LaunchConfiguration('camera_topic_prefix'), '/camera_info']),
+                        ('image', [LaunchConfiguration('camera_topic_prefix'), '/image_raw']),
                         ('image_mono', [LaunchConfiguration('rgb'), '/image_raw']),
                         ('image_rect', [LaunchConfiguration('rgb'), '/image_rect_color']),
                     ],

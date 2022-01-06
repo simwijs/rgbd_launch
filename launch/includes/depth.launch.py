@@ -18,6 +18,11 @@ def generate_launch_description():
             default_value="true"
         ),
         DeclareLaunchArgument(
+            'camera_topic_prefix',
+            default_value=""
+            # default_value="camera/depth"
+        ),
+        DeclareLaunchArgument(
             'respawn',
             default_value="false"
         ),
@@ -37,6 +42,8 @@ def generate_launch_description():
                     name=[LaunchConfiguration('depth'), '_rectify_depth'],
                     plugin='image_proc::RectifyNode',
                     remappings=[
+                        ('camera_info', [LaunchConfiguration('camera_topic_prefix'), '/camera_info']),
+                        ('image', [LaunchConfiguration('camera_topic_prefix'), '/image_raw']),
                         ('image_mono', [LaunchConfiguration('depth'), '/image_raw']),
                         ('image_rect', [LaunchConfiguration('depth'), '/image_rect_raw'])
                     ],
@@ -59,6 +66,7 @@ def generate_launch_description():
                     name=[LaunchConfiguration('depth'), '_metric_rect'],
                     plugin='depth_image_proc::ConvertMetricNode',
                     remappings=[
+                        ('camera_info', [LaunchConfiguration('camera_topic_prefix'), '/camera_info']),
                         ('image_raw', [LaunchConfiguration('depth'), '/image_rect_raw']),
                         ('image', [LaunchConfiguration('depth'), '/image_rect'])
                     ],
@@ -71,6 +79,7 @@ def generate_launch_description():
                     name=[LaunchConfiguration('depth'), '_metric'],
                     plugin='depth_image_proc::ConvertMetricNode',
                     remappings=[
+                        ('camera_info', [LaunchConfiguration('camera_topic_prefix'), '/camera_info']),
                         ('image_raw', [LaunchConfiguration('depth'), '/image_raw']),
                         ('image', [LaunchConfiguration('depth'), '/image'])
                     ],
@@ -88,6 +97,8 @@ def generate_launch_description():
                     name=[LaunchConfiguration('depth'), '_points'],
                     plugin='depth_image_proc::PointCloudXyzNode',
                     remappings=[
+                        ('camera_info', [LaunchConfiguration('camera_topic_prefix'), '/camera_info']),
+                        ('image', [LaunchConfiguration('camera_topic_prefix'), '/image_raw']),
                         ('image_rect', [LaunchConfiguration('depth'), '/image_rect_raw']),
                         ('points', [LaunchConfiguration('depth'), '/points'])
                     ],
