@@ -80,8 +80,8 @@ def generate_launch_description():
                     plugin='depth_image_proc::ConvertMetricNode',
                     remappings=[
                         ('camera_info', [LaunchConfiguration('camera_topic_prefix'), '/camera_info']),
-                        ('image_raw', [LaunchConfiguration('depth'), '/image_raw']),
-                        ('image', [LaunchConfiguration('depth'), '/image'])
+                        ('image_raw', [LaunchConfiguration('camera_topic_prefix'), '/image_raw']),
+                        ('image', [LaunchConfiguration('camera_topic_prefix'), '/image'])
                     ],
                     extra_arguments=[
                         {'--no-daemon': LaunchConfiguration('respawn')}
