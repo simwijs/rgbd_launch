@@ -110,8 +110,8 @@ def generate_launch_description():
                             name=[LaunchConfiguration('depth_registered'), '_rectify_depth'],
                             plugin='image_proc::RectifyNode',
                             remappings=[
-                                # ('image', 'camera/depth/image_raw'),
-                                # ('camera_info', 'camera/depth/camera_info'),
+                                ('image', ['/camera/depth/image_raw']),
+                                ('camera_info', ['/camera/depth/camera_info']),
                                 ('image_mono', [LaunchConfiguration('depth_registered'), '/image_raw']),
                                 ('image_rect', [LaunchConfiguration('depth_registered'), '/hw_registered/image_rect_raw'])
                             ],
